@@ -35,4 +35,20 @@ loop(S = #state{}) ->
       loop(State)
   end.
 
+valid_datetime({Date, Time}) ->
+  try
+    calendar:valid_date(Date) andalso valid_time(Time)
+  catch
+    error:function_clause -> %% invalid format
+      false
+  end;
+valid_datetime(_) ->
+  false.
+
+valid_time({H,M,S}) -> valid_time(H,M,S).
+valid_time(H,M,S) when H >= 0, H < 24,
+                       M >= 0, M < 60,
+                       S >= 0, S < 60 -> true;
+valid_time(_,_,_) -> false.
+
 
