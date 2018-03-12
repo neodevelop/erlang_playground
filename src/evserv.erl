@@ -52,7 +52,7 @@ loop(S = #state{}) ->
           send_to_clients({done, E#event.name, E#event.description},
                          S#state.clients),
           NewEvents = orddict:erase(Name, S#state.events),
-          loop(S#state{evetns=NewEvents});
+          loop(S#state{events=NewEvents});
         error ->
           loop(S)
       end;
@@ -64,7 +64,7 @@ loop(S = #state{}) ->
       ?MODULE:loop(S);
     Unknown ->
       io:format("Unknown message: ~p~n", [Unknown]),
-      loop(State)
+      loop(S)
   end.
 
 valid_datetime({Date, Time}) ->
