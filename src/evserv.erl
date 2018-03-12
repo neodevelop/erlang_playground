@@ -32,7 +32,7 @@ loop(S = #state{}) ->
       Pid ! {MsgRef, ok},
       loop(S#state{clients=NewClients});
     {Pid, MsgRef, {add, Name, Description, TimeOut}} ->
-      case valid_time(TimeOut) of
+      case valid_datetime(TimeOut) of
         true ->
           EventPid = event:start_link(Name, TimeOut),
           NewEvents = orddict:store(Name,
