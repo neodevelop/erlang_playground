@@ -47,7 +47,15 @@ loop(S = #state{}) ->
       Pid ! {MsgRef, ok},
       loop(S#state{events=Events});
     {done, Name} ->
-      % ...
+      case orddict:find(Name, S#state.events) of
+        {ok, E} ->
+          send_to_clients({done, E#event.name, E#event.description},
+                         S#state.clients),
+          NewEvents = orddict:erase(Name, S#state.events),
+          loop(S#state{evetns=NewEvents});
+        error ->
+          loop(S)
+      end;
     {'DOWN', Ref, process, _Pid, _Reason} ->
       % ...
     code_change ->
@@ -73,4 +81,5 @@ valid_time(H,M,S) when H >= 0, H < 24,
                        S >= 0, S < 60 -> true;
 valid_time(_,_,_) -> false.
 
-
+send_to_clients(Msg, ClientDict) ->
+  orddict:map(fun(_Ref, Pid) -> Pid ! Msg end, ClientDict).
