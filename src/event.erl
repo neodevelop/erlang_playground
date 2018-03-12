@@ -4,11 +4,11 @@
                 name="",
                 to_go=0}).
 
-start(EventName, Delay) ->
-  spawn(?MODULE, init, [self(), EventName, Delay]).
+start(EventName, DateTime) ->
+  spawn(?MODULE, init, [self(), EventName, DateTime]).
 
-start_link(EventName, Delay) ->
-  spawn_link(?MODULE, init, [self(), EventName, Delay]).
+start_link(EventName, DateTime) ->
+  spawn_link(?MODULE, init, [self(), EventName, DateTime]).
 
 init(Server, EventName, DateTime) ->
   loop(#state{server=Server,
