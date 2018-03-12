@@ -1,7 +1,19 @@
 -module(evserv).
 -compile(export_all).
 
-loop(State) ->
+-record(state, {events,   %% List of #event recors
+               clients}). %% List of pids
+
+-record(event, {name="",
+               description="",
+               pid,
+               timeout={{1970,1,1},{0,0,0}}}).
+
+init() ->
+  loop(#state{events=orddict:new(),
+             clients=orddict:new()}).
+
+loop(S = #state{}) ->
   receive
     {Pid, MsgRef, {subscribe, Client}} ->
       % ...
@@ -19,3 +31,4 @@ loop(State) ->
       io:format("Unknown message: ~p~n", [Unknown]),
       loop(State)
   end.
+
