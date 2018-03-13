@@ -8,7 +8,7 @@ start_link(Mod, Args) ->
   spawn_link(?MODULE, init, [{Mod, Args}]).
 
 init({Mod, Args}) ->
-  process_flags(trap_exit, true),
+  process_flag(trap_exit, true),
   loop({Mod, start_link, Args}).
 
 loop({M,F,A}) ->
