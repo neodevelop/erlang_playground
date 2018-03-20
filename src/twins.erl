@@ -2,13 +2,13 @@
 -compile(export_all).
 
 launch() ->
-  spawn(twins, create, []),
-  ok.
-
-create() ->
-  spawn_link(twins, zipi, [0]),
+  LauncherPid = launcher:init(),
+  Zipi = spawn(twins, zipi, [0]),
+  launcher:add(LauncherPid, Zipi),
   timer:sleep(500),
-  zape(0).
+  Zape = spawn(twins, zape, [0]),
+  launcher:add(LauncherPid, Zape),
+  LauncherPid.
 
 zipi(A) ->
   io:format("zipi - ~w~n", [A]),
@@ -18,7 +18,4 @@ zipi(A) ->
 zape(A) ->
   io:format("zape ~w~n", [A]),
   timer:sleep(1000),
-  case A of
-    A when A < 5 -> ok
-  end,
   zape(A+1).
